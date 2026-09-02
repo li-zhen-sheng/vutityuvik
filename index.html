@@ -1,0 +1,142 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>回忆录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../001/泰华.png" >
+    <style>
+* {margin:0;padding:0;box-sizing:border-box;}
+body{
+    padding: 10px;
+    font-family:system-ui;
+    font-size: 25px;
+}
+/* 右上角取消按钮 */
+#cancelBtn{
+      position:fixed;
+      top:12px;
+      right:16px;
+      padding:4px 8px;
+      background:#e53935;
+      color:#fff;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
+      z-index:999;
+}
+/*左下角跳转*/
+#goBtn{
+      position:fixed;
+      bottom:12px;
+      left:16px;
+      padding:4px 8px;
+      font-size:14px;
+      background:#133f7d;
+      color:#ffffff;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
+      z-index:999;
+}
+/* 圆圈倒计时容器 */
+#countdown-circle {
+    position: fixed;
+    top: 50px;
+    right: 200px;
+    transform: translate(-50%, -50%);
+    width: 0px;
+    height: 0px;
+    z-index: 999;
+    pointer-events: none;
+}
+/* 圆形进度 */
+#countdown-circle svg {
+    transform: rotate(-90deg);
+}
+/* 中间秒数文字 */
+#countdown-text {
+    position: absolute;
+    top: 50px;
+    right: -50px; 
+    font-size:25px;
+    font-weight:bold;
+    color:#d32f2f;
+}
+/* 倒计时说明文字 */
+#countdown-tip {
+    position: absolute;
+    top: 40px;
+    right: -40px;
+    transform: translateX(50px);
+    font-size:14px;
+    color:#666;
+    white-space:nowrap;
+}
+  </style>
+</head>
+
+
+<body>
+    <h2>3秒后将自动跳转到淘宝</h2>
+  <button id="cancelBtn">取消跳转</button>
+    <button id="goBtn">立即跳转</button>
+    <!-- 圆圈倒计时 -->
+    <div id="countdown-circle">
+        <svg width="120" height="120">
+            <circle cx="60" cy="60" r="54" fill="none" stroke="#e0e0e0" stroke-width="6"/>
+            <circle id="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#e53935" stroke-width="6" stroke-linecap="round"/>
+        </svg>
+        <div id="countdown-text">3</div>
+        <div id="countdown-tip">秒后结束</div>
+    </div>
+
+ <script>
+    //实际总时间5000毫秒=5秒
+    const timer = setTimeout(()=>{
+      location.href = "https://www.taobao.com";
+    },6000);
+
+    const totalTime = 6000;
+    const showTime = 3;
+    const interval = 100;
+    let remaining = totalTime;
+    let countdownInterval;
+
+    const countdownText = document.getElementById('countdown-text');
+    const progressRing = document.getElementById('progress-ring');
+    const circumference = 2 * Math.PI * 54;
+    progressRing.style.strokeDasharray = circumference;
+    progressRing.style.strokeDashoffset = 0;
+
+    const updateCountdown = () => {
+        const showValue = Math.ceil(remaining / 1000);
+        if (showValue <= showTime) {
+            countdownText.textContent = showValue;
+        }
+        const offset = circumference * (1 - remaining / totalTime);
+        progressRing.style.strokeDashoffset = offset;
+    };
+
+    
+    countdownInterval = setInterval(()=>{
+        remaining -= interval;
+        updateCountdown();
+        if(remaining <= 0){
+            clearInterval(countdownInterval);
+        }
+    },interval);
+
+    //右上角取消按钮,呵呵你觉得可能有取消吗？
+   
+    //左下角立即跳转按钮
+    const goBtn = document.getElementById('goBtn');
+    goBtn.addEventListener('click',()=>{
+      clearTimeout(timer);
+      clearInterval(countdownInterval);
+      location.href = "https://www.pinduoduo.com";
+    })
+ </script>
+
+</body>
+</html>
